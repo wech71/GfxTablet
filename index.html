@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Xorgtablet by rfc2822</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Xorgtablet</h1>
+        <p>Android app to control an xf86-networktablet (virtual tablet)</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/rfc2822/XorgTablet" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/rfc2822/XorgTablet/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/rfc2822/XorgTablet/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>XorgTablet</h1>
+
+<p>XorgTablet is an Android app that sends motion and touch events
+via UDP to a specified host on port 40117.</p>
+
+<p>It is especially useful in combination with the xf86-networktablet
+X.org input driver (<a href="https://github.com/rfc2822/xf86-networktablet">https://github.com/rfc2822/xf86-networktablet</a>)
+that allows these touch events to be processed by the X server. So,
+you can use your Android tablet or smartphone to control the X
+server and, for instance <em>use GIMP with your Android tablet
+as a graphics tablet</em> (even pressure-sensitive, if your hardware
+supports it).</p>
+
+<h2>Requirements</h2>
+
+<p>Any device with Android 4.0+ and touch screen</p>
+
+<h2>Download</h2>
+
+<p>You can find the latest binary on SourceForge:
+<a href="https://sourceforge.net/projects/xorgtablet/files/XorgTablet/">https://sourceforge.net/projects/xorgtablet/files/XorgTablet/</a></p>
+
+<h2>Features</h2>
+
+<ul>
+<li>Pressure sensitive</li>
+<li>Size of canvas will be detected and sent to the client</li>
+<li>Option for ignoring events that are not triggered by a stylus pen:
+so you can lay your hand on the tablet and draw with the pen.</li>
+</ul><h2>Technical details</h2>
+
+<p>The used protocol:
+<a href="https://github.com/rfc2822/xf86-networktablet/blob/master/protocol.h">https://github.com/rfc2822/xf86-networktablet/blob/master/protocol.h</a></p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/rfc2822">rfc2822</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
