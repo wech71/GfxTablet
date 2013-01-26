@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Xorgtablet by rfc2822</title>
+    <title>GfxTablet by rfc2822</title>
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -17,8 +17,8 @@
   <body>
 
       <header>
-        <h1>Xorgtablet</h1>
-        <p>Android app to control an xf86-networktablet (virtual tablet)</p>
+        <h1>GfxTablet</h1>
+        <p>Android app to control a virtual Network Tablet on Linux</p>
       </header>
 
       <div id="banner">
@@ -39,39 +39,88 @@
         <ul></ul>
       </nav>
       <section>
-        <h1>XorgTablet</h1>
+        <h1>What is GfxTablet?</h1>
 
-<p>XorgTablet is an Android app that sends motion and touch events
-via UDP to a specified host on port 40117.</p>
+<p>GfxTablet shall make it possible to use your Android device (especially
+tablets) like a graphics tablet.</p>
 
-<p>It is especially useful in combination with the xf86-networktablet
-X.org input driver (<a href="https://github.com/rfc2822/xf86-networktablet">https://github.com/rfc2822/xf86-networktablet</a>)
-that allows these touch events to be processed by the X server. So,
-you can use your Android tablet or smartphone to control the X
-server and, for instance <em>use GIMP with your Android tablet
-as a graphics tablet</em> (even pressure-sensitive, if your hardware
-supports it).</p>
+<p>It consists of two components:</p>
 
-<h2>Requirements</h2>
+<ul>
+<li>the GfxTablet Android app</li>
+<li>the input driver for your PC</li>
+</ul><p>The GfxTablet app sends motion and touch events via UDP to a specified host
+on port 40117.</p>
 
-<p>Any device with Android 4.0+ and touch screen</p>
+<p>The input driver must be installed on your PC. It creates a virtual "network tablet"
+on your PC that is controlled by your Android device.</p>
 
-<h2>Download</h2>
+<p>So, you can use your Android tablet or smartphone to control the PC and,
+for instance <em>use GIMP with your Android tablet as a graphics tablet</em>
+(even pressure-sensitive, if your hardware supports it).</p>
 
-<p>You can find the latest binary on SourceForge:
-<a href="https://sourceforge.net/projects/xorgtablet/files/XorgTablet/">https://sourceforge.net/projects/xorgtablet/files/XorgTablet/</a></p>
+<h2>License</h2>
+
+<p>GfxTablet is licensed under The MIT License.</p>
+
+<p>Author: Richard Hirner
+Powered by <a href="http://www.bitfire.at">bitfire web engineering</a></p>
 
 <h2>Features</h2>
 
 <ul>
-<li>Pressure sensitive</li>
+<li>Pressure sensitivity supported</li>
 <li>Size of canvas will be detected and sent to the client</li>
 <li>Option for ignoring events that are not triggered by a stylus pen:
 so you can lay your hand on the tablet and draw with the pen.</li>
-</ul><h2>Technical details</h2>
+</ul><h2>Requirements</h2>
 
-<p>The used protocol:
-<a href="https://github.com/rfc2822/xf86-networktablet/blob/master/protocol.h">https://github.com/rfc2822/xf86-networktablet/blob/master/protocol.h</a></p>
+<ul>
+<li>App: Any device with Android 4.0+ and touch screen</li>
+<li>Driver: Linux with uinput kernel module (included in modern versions of Fedora, Ubuntu etc.)</li>
+</ul><h1>Installation</h1>
+
+<p>Github repository: <a href="http://github.com/rfc2822/GfxTablet">http://github.com/rfc2822/GfxTablet</a></p>
+
+<h2>Part 1: uinput driver</h2>
+
+<p>On your PC, either download one of these binaries:</p>
+
+<ul>
+<li><a href="uinput-networktablet%2064-bit,%20dynamically%20linked,%20tested%20with%20Fedora%2018%20and%20Ubuntu%2012.10">https://github.com/rfc2822/GfxTablet/blob/binaries/uinput-networktablet-x86_64?raw=true</a></li>
+</ul><p>or compile it yourself (don't be afraid, it's only one file)</p>
+
+<ol>
+<li>Clone the repository:
+<code>git clone git://github.com/rfc2822/GfxTablet.git</code>
+</li>
+<li>Install gcc, make and linux kernel header includes (<code>kernel-headers</code> on Fedora)</li>
+<li><code>cd driver-uinput; make</code></li>
+</ol><p>Then, run the binary. The driver runs in user-mode, so it doesn't need any special privileges.
+However, it needs access to <code>/dev/uinput</code>. If your distribution doesn't create a group for
+uinput access, you'll need to do it yourself or just run the driver as root:</p>
+
+<p><code>sudo ./networktablet</code></p>
+
+<p>Then, <code>xinput list</code> should show a "Network Tablet" device.</p>
+
+<p>You can start and stop (Ctrl+C) the Network Tablet at any time, but please be aware that applications
+which use the device may be confused by that and could crash.</p>
+
+<p><code>networktablet</code> will display a dot for every touch/motion event it receives.</p>
+
+<h2>Part 2: App</h2>
+
+<p>You can either compile the app from the source code in the Git repository or download
+it directly from Google Play: <a href="https://play.google.com/store/apps/details?id=at.bitfire.gfxtablet">https://play.google.com/store/apps/details?id=at.bitfire.gfxtablet</a></p>
+
+<p>After installing, enter your host IP in the Settings / Host name and it should be ready.</p>
+
+<h1>Support</h1>
+
+<p>For bug reports, please use the <a href="Github%20issues%20page">https://github.com/rfc2822/GfxTablet/issues</a>.</p>
+
+<p>If you want to support this project, please consider a <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=ZT8F5NRCBDB2C&amp;no_note=0&amp;no_shipping=1&amp;currency_code=EUR">donation via PayPal</a>.</p>
       </section>
       <footer>
         <p>Project maintained by <a href="https://github.com/rfc2822">rfc2822</a></p>
