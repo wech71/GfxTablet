@@ -85,7 +85,7 @@ so you can lay your hand on the tablet and draw with the pen.</li>
 
 <h2>Part 1: uinput driver</h2>
 
-<p>On your PC, either download one of these binaries:</p>
+<p>On your PC, either download one of these binaries (don't forget to <code>chmod a+x</code> it):</p>
 
 <ul>
 <li><a href="https://github.com/rfc2822/GfxTablet/blob/binaries/uinput-networktablet-x86_64?raw=true">uinput-networktablet 64-bit, dynamically linked, tested with Fedora 18 and Ubuntu 12.10</a></li>
@@ -116,6 +116,12 @@ which use the device may be confused by that and could crash.</p>
 it directly from Google Play: <a href="https://play.google.com/store/apps/details?id=at.bitfire.gfxtablet">https://play.google.com/store/apps/details?id=at.bitfire.gfxtablet</a></p>
 
 <p>After installing, enter your host IP in the Settings / Host name and it should be ready.</p>
+
+<h2>Part 3: Use it</h2>
+
+<p>Now you can use your tablet as an input device in every Linux application (including X.org
+applications). For instance, when networktablet is running, GIMP should have a "Network Tablet"
+entry in "Edit / Input Devices". Set its mode to "Screen" and it's ready to use.</p>
 
 <h1>Support</h1>
 
