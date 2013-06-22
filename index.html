@@ -45,7 +45,8 @@
 <li><a href="http://twitter.com/GfxTablet">follow GfxTablet on Twitter</a></li>
 <li><a href="http://feeds.feedburner.com/GfxTablet">subscribe to our RSS/Atom feed</a></li>
 <li><a href="http://feedburner.google.com/fb/a/mailverify?uri=GfxTablet">subscribe to email notifications</a></li>
-</ul><h1>What is GfxTablet?</h1>
+</ul><h1>
+<a name="what-is-gfxtablet" class="anchor" href="#what-is-gfxtablet"><span class="octicon octicon-link"></span></a>What is GfxTablet?</h1>
 
 <p>GfxTablet shall make it possible to use your Android device (especially
 tablets) like a graphics tablet.</p>
@@ -69,7 +70,8 @@ for instance <em>use GIMP with your Android tablet as a graphics tablet</em>
 
 <p>If you want to support this project, please consider a <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=ZT8F5NRCBDB2C&amp;no_note=0&amp;no_shipping=1&amp;currency_code=EUR&amp;item_name=GfxTablet+donation">donation via PayPal</a>.</p>
 
-<h2>License</h2>
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>GfxTablet is licensed under The MIT License.</p>
 
@@ -77,14 +79,16 @@ for instance <em>use GIMP with your Android tablet as a graphics tablet</em>
 
 <p>Powered by <a href="http://www.bitfire.at">bitfire web engineering</a> / <a href="http://www.gimpusers.com">gimpusers.com</a></p>
 
-<h2>Features</h2>
+<h2>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
 
 <ul>
 <li>Pressure sensitivity supported</li>
 <li>Size of canvas will be detected and sent to the client</li>
 <li>Option for ignoring events that are not triggered by a stylus pen:
 so you can lay your hand on the tablet and draw with the pen.</li>
-</ul><h2>Requirements</h2>
+</ul><h2>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
 
 <ul>
 <li>App: Any device with Android 4.0+ and touch screen</li>
@@ -96,16 +100,18 @@ so you can lay your hand on the tablet and draw with the pen.</li>
 Probably on by default, but if it doesn't work, you may need to activate the
 module: see <a href="https://github.com/rfc2822/GfxTablet/issues/7#issuecomment-13338216">https://github.com/rfc2822/GfxTablet/issues/7#issuecomment-13338216</a>
 </li>
-</ul><h1>Installation</h1>
+</ul><h1>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h1>
 
 <p>Github repository: <a href="http://github.com/rfc2822/GfxTablet">http://github.com/rfc2822/GfxTablet</a></p>
 
-<h2>Part 1: uinput driver</h2>
+<h2>
+<a name="part-1-uinput-driver" class="anchor" href="#part-1-uinput-driver"><span class="octicon octicon-link"></span></a>Part 1: uinput driver</h2>
 
 <p>On your PC, either download one of these binaries (don't forget to <code>chmod a+x</code> it):</p>
 
 <ul>
-<li><a href="https://github.com/rfc2822/GfxTablet/blob/binaries/uinput-networktablet-x86_64?raw=true">uinput-networktablet 64-bit, dynamically linked, tested with Fedora 18 and Ubuntu 12.10</a></li>
+<li><a href="https://github.com/rfc2822/GfxTablet/blob/binaries/networktablet-x86_64?raw=true">networktablet 64-bit, dynamically linked, tested with Fedora 18 and Ubuntu 12.10</a></li>
 </ul><p>or compile it yourself (don't be afraid, it's only one file)</p>
 
 <ol>
@@ -120,38 +126,38 @@ uinput access, you'll need to do it yourself or just run the driver as root:</p>
 
 <p><code>sudo ./networktablet</code></p>
 
-<p>Then, <code>xinput list</code> should show a "Network Tablet" device.</p>
+<p>Then you should see a status message saying the driver is ready. If you do <code>xinput list</code> in a separate
+terminal, should show a "Network Tablet" device.</p>
 
 <p>You can start and stop (Ctrl+C) the Network Tablet at any time, but please be aware that applications
 which use the device may be confused by that and could crash.</p>
 
-<p><code>networktablet</code> will display a dot for every touch/motion event it receives.</p>
+<p><code>networktablet</code> will display a status line for every touch/motion event it receives.</p>
 
-<h2>Part 2: App</h2>
+<h2>
+<a name="part-2-app" class="anchor" href="#part-2-app"><span class="octicon octicon-link"></span></a>Part 2: App</h2>
 
 <p>You can either compile the app from the source code in the Git repository or download
 it directly from Google Play: <a href="https://play.google.com/store/apps/details?id=at.bitfire.gfxtablet">https://play.google.com/store/apps/details?id=at.bitfire.gfxtablet</a></p>
 
 <p>After installing, enter your host IP in the Settings / Host name and it should be ready.</p>
 
-<h2>Part 3: Use it</h2>
+<h2>
+<a name="part-3-use-it" class="anchor" href="#part-3-use-it"><span class="octicon octicon-link"></span></a>Part 3: Use it</h2>
 
 <p>Now you can use your tablet as an input device in every Linux application (including X.org
 applications). For instance, when networktablet is running, GIMP should have a "Network Tablet"
 entry in "Edit / Input Devices". Set its mode to "Screen" and it's ready to use.</p>
 
-<p>It's important that you start the app <em>after</em> the driver, because it sends the resolution
-to the driver. If you start the app before the driver, the mouse cursor will always be on
-the left top and won't move much.</p>
-
-<h1>Support</h1>
+<h1>
+<a name="support" class="anchor" href="#support"><span class="octicon octicon-link"></span></a>Support</h1>
 
 <p>For bug reports, please use the <a href="https://github.com/rfc2822/GfxTablet/issues">Github issues page</a>
 or just fork the repository, fix the bug and send a merge request.</p>
       </section>
       <footer>
         <p>Project maintained by <a href="https://github.com/rfc2822">rfc2822</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
       </footer>
     </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
