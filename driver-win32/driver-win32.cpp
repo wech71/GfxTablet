@@ -5,6 +5,7 @@
 #pragma comment(lib, "Ws2_32.lib")
 
 #define MAX_LOADSTRING 100
+#define SIMULATE_HOVER_TROUGH_LIGHT_TOUCH 1
 
 // Global Variables:
 HINSTANCE hInst;								// current instance
@@ -109,10 +110,10 @@ DWORD WINAPI DriverThreadStart(LPVOID lpThreadParameter)
    return RunDriver();
 }
 
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
-{
-   HWND hWnd;
+HWND hWnd = NULL;
 
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+{   
    hInst = hInstance; // Store instance handle in our global variable
 
    hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
@@ -194,6 +195,8 @@ void die(TCHAR* fmt, ...)
 	TCHAR msgbuf[4096];
 	_vsntprintf_s(msgbuf, _countof(msgbuf), fmt, args);
 	MessageBox(NULL, msgbuf, _T("GfxTablet Win32 driver error"), MB_ICONERROR|MB_OK);
+	
+	RemoveTrayIcon(hWnd);
 	ExitProcess(EXIT_FAILURE);
 }
 
@@ -203,7 +206,7 @@ int prepare_socket()
 	struct sockaddr_in addr;
 
 	WSADATA wsadata;
-	WSAStartup(2,&wsadata);
+	WSAStartup(WINSOCK_VERSION, &wsadata);
 
 	if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
 		die(_T("error: prepare_socket()"));
@@ -214,7 +217,13 @@ int prepare_socket()
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	if (bind(s, (struct sockaddr *)&addr, sizeof(addr)) == -1)
-		die(_T("error: prepare_socket()"));
+	{
+		DWORD dwErr = WSAGetLastError();
+		if (dwErr == WSAEADDRINUSE)
+			die(_T("error: prepare_socket(). Port already in use") );
+		else
+			die(_T("error: prepare_socket(). Error = 0x%08x"), dwErr );
+	}
 
 	return s;
 }
@@ -270,9 +279,15 @@ int RunDriver(void)
 		inputs[0].mi.dwFlags = MOUSEEVENTF_ABSOLUTE;
 
 		//no support for pressure on windows :-((
+		//This is only possible with an HID miniport driver.
+		//GIMP uses DirectInput - probably the HID miniport driver would be visible trough HID
+		//If not a DirectInput driver would be necessary too
 		//send_event(device, EV_ABS, ABS_PRESSURE, ev_pkt.pressure);
 
-		//hack
+#if SIMULATE_HOVER_TROUGH_LIGHT_TOUCH 
+		//hack: ignores EVENT_TYPE_BUTTON (android touch events), but generates them
+		//when pressure is over a specific limit, so it is possible to move the finger
+		//around the tablet without drawing
 		if(ev_pkt.type==EVENT_TYPE_BUTTON && ev_pkt.down)
 		{
 			ev_pkt.type=EVENT_TYPE_MOTION;
@@ -282,6 +297,7 @@ int RunDriver(void)
 			if (!isDown)
 				ev_pkt.type=EVENT_TYPE_BUTTON;
 		}
+#endif
 
 		switch (ev_pkt.type) {
 			case EVENT_TYPE_MOTION:
