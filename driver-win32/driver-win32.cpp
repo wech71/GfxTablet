@@ -5,7 +5,7 @@
 #pragma comment(lib, "Ws2_32.lib")
 
 #define MAX_LOADSTRING 100
-#define SIMULATE_HOVER_TROUGH_LIGHT_TOUCH 1
+//#define SIMULATE_HOVER_TROUGH_LIGHT_TOUCH 1
 
 // Global Variables:
 HINSTANCE hInst;								// current instance
