@@ -10,6 +10,7 @@
 #include <arpa/inet.h>
 #include <linux/input.h>
 #include <linux/uinput.h>
+#include <stdint.h>
 #include "protocol.h"
 
 #define die(str, args...) { \
@@ -23,15 +24,23 @@ int udp_socket;
 
 void init_device(int fd)
 {
-	struct uinput_user_dev uidev;
+	// enable synchronization
+	if (ioctl(fd, UI_SET_EVBIT, EV_SYN) < 0)
+		die("error: ioctl UI_SET_EVBIT EV_SYN");
 
-	// 1 button
+	// enable 1 button
 	if (ioctl(fd, UI_SET_EVBIT, EV_KEY) < 0)
 		die("error: ioctl UI_SET_EVBIT EV_KEY");
 	if (ioctl(fd, UI_SET_KEYBIT, BTN_TOUCH) < 0)
 		die("error: ioctl UI_SET_KEYBIT");
+	if (ioctl(fd, UI_SET_KEYBIT, BTN_TOOL_PEN) < 0)
+		die("error: ioctl UI_SET_KEYBIT");
+	if (ioctl(fd, UI_SET_KEYBIT, BTN_STYLUS) < 0)
+		die("error: ioctl UI_SET_KEYBIT");
+	if (ioctl(fd, UI_SET_KEYBIT, BTN_STYLUS2) < 0)
+		die("error: ioctl UI_SET_KEYBIT");
 
-	// 2 main axes + pressure (absolute positioning)
+	// enable 2 main axes + pressure (absolute positioning)
 	if (ioctl(fd, UI_SET_EVBIT, EV_ABS) < 0)
 		die("error: ioctl UI_SET_EVBIT EV_ABS");
 	if (ioctl(fd, UI_SET_ABSBIT, ABS_X) < 0)
@@ -41,23 +50,56 @@ void init_device(int fd)
 	if (ioctl(fd, UI_SET_ABSBIT, ABS_PRESSURE) < 0)
 		die("error: ioctl UI_SETEVBIT ABS_PRESSURE");
 
-	memset(&uidev, 0, sizeof(uidev));
-	snprintf(uidev.name, UINPUT_MAX_NAME_SIZE, "Network Tablet");
-	uidev.id.bustype = BUS_VIRTUAL;
-	uidev.id.vendor  = 0x1;
-	uidev.id.product = 0x1;
-	uidev.id.version = 1;
-	uidev.absmin[ABS_X] = 0;
-	uidev.absmax[ABS_X] = SHRT_MAX;
-	uidev.absmin[ABS_Y] = 0;
-	uidev.absmax[ABS_Y] = SHRT_MAX;
-	uidev.absmin[ABS_PRESSURE] = 0;
-	uidev.absmax[ABS_PRESSURE] = SHRT_MAX/2;
-	if (write(fd, &uidev, sizeof(uidev)) < 0)
-		die("error: write");
+        {
+          struct uinput_abs_setup abs_setup;
+          struct uinput_setup setup;
 
-	if (ioctl(fd, UI_DEV_CREATE) < 0)
-		die("error: ioctl");
+          memset(&abs_setup, 0, sizeof(abs_setup));
+          abs_setup.code = ABS_X;
+          abs_setup.absinfo.value = 0;
+          abs_setup.absinfo.minimum = 0;
+          abs_setup.absinfo.maximum = UINT16_MAX;
+          abs_setup.absinfo.fuzz = 0;
+          abs_setup.absinfo.flat = 0;
+          abs_setup.absinfo.resolution = 400;
+          if (ioctl(fd, UI_ABS_SETUP, &abs_setup) < 0)
+            die("error: UI_ABS_SETUP ABS_X");
+
+          memset(&abs_setup, 0, sizeof(abs_setup));
+          abs_setup.code = ABS_Y;
+          abs_setup.absinfo.value = 0;
+          abs_setup.absinfo.minimum = 0;
+          abs_setup.absinfo.maximum = UINT16_MAX;
+          abs_setup.absinfo.fuzz = 0;
+          abs_setup.absinfo.flat = 0;
+          abs_setup.absinfo.resolution = 400;
+          if (ioctl(fd, UI_ABS_SETUP, &abs_setup) < 0)
+            die("error: UI_ABS_SETUP ABS_Y");
+
+          memset(&abs_setup, 0, sizeof(abs_setup));
+          abs_setup.code = ABS_PRESSURE;
+          abs_setup.absinfo.value = 0;
+          abs_setup.absinfo.minimum = 0;
+          abs_setup.absinfo.maximum = INT16_MAX;
+          abs_setup.absinfo.fuzz = 0;
+          abs_setup.absinfo.flat = 0;
+          abs_setup.absinfo.resolution = 0;
+          if (ioctl(fd, UI_ABS_SETUP, &abs_setup) < 0)
+            die("error: UI_ABS_SETUP ABS_PRESSURE");
+
+          memset(&setup, 0, sizeof(setup));
+          snprintf(setup.name, UINPUT_MAX_NAME_SIZE, "Network Tablet");
+          setup.id.bustype = BUS_VIRTUAL;
+          setup.id.vendor  = 0x1;
+          setup.id.product = 0x1;
+          setup.id.version = 2;
+          setup.ff_effects_max = 0;
+          if (ioctl(fd, UI_DEV_SETUP, &setup) < 0)
+            die("error: UI_DEV_SETUP");
+
+          if (ioctl(fd, UI_DEV_CREATE) < 0)
+            die("error: ioctl");
+        }
 }
 
 int prepare_socket()
@@ -86,7 +128,7 @@ void send_event(int device, int type, int code, int value)
 	ev.code = code;
 	ev.value = value;
 	if (write(device, &ev, sizeof(ev)) < 0)
-		error("error: write()");
+		die("error: write()");
 }
 
 void quit(int signal) {
@@ -128,7 +170,7 @@ int main(void)
 		ev_pkt.x = ntohs(ev_pkt.x);
 		ev_pkt.y = ntohs(ev_pkt.y);
 		ev_pkt.pressure = ntohs(ev_pkt.pressure);
-		printf("x: %hi, y: %hi, pressure: %hi\n", ev_pkt.x, ev_pkt.y, ev_pkt.pressure);
+		printf("x: %hu, y: %hu, pressure: %hu\n", ev_pkt.x, ev_pkt.y, ev_pkt.pressure);
 
 		send_event(device, EV_ABS, ABS_X, ev_pkt.x);
 		send_event(device, EV_ABS, ABS_Y, ev_pkt.y);
@@ -139,8 +181,19 @@ int main(void)
 				send_event(device, EV_SYN, SYN_REPORT, 1);
 				break;
 			case EVENT_TYPE_BUTTON:
+				// stylus hovering
+				if (ev_pkt.button == -1)
+					send_event(device, EV_KEY, BTN_TOOL_PEN, ev_pkt.down);
+				// stylus touching
 				if (ev_pkt.button == 0)
 					send_event(device, EV_KEY, BTN_TOUCH, ev_pkt.down);
+				// button 1
+				if (ev_pkt.button == 1)
+					send_event(device, EV_KEY, BTN_STYLUS, ev_pkt.down);
+				// button 2
+				if (ev_pkt.button == 2)
+					send_event(device, EV_KEY, BTN_STYLUS2, ev_pkt.down);
+				printf("sent button: %hhi, %hhu\n", ev_pkt.button, ev_pkt.down);
 				send_event(device, EV_SYN, SYN_REPORT, 1);
 				break;
 
