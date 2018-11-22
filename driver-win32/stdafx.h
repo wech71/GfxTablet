@@ -27,4 +27,9 @@
 #include <errno.h>
 #include <limits.h>
 #include <wininet.h>
+
+typedef unsigned short uint16_t;
+typedef unsigned char uint8_t;
+typedef char int8_t;
+
 #include "../driver-uinput/protocol.h"
